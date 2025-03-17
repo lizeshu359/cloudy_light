@@ -1,0 +1,37 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - my_network
+
+  pre-work:
+    build: ./pre-work  # 假设你的生产者代码在 ./producer 目录
+    depends_on:
+      - rabbitmq
+    networks:
+      - my_network
+
+  consumer:
+    build: ./consumer  # 假设你的消费者代码在 ./consumer 目录
+    depends_on:
+      - rabbitmq
+    networks:
+      - my_network
+
+  networks:
+    my_network:
+      driver: bridge
+  consumer:
+    build: ./consumer  # 假设你的消费者代码在 ./consumer 目录
+    depends_on:
+      - rabbitmq
+    networks:
+      - my_network
+
+networks:
+  my_network:
+    driver: bridge

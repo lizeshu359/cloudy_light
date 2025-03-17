@@ -1,0 +1,12 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# 先复制依赖声明（利用Docker层缓存）
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# 再复制应用代码
+COPY ../cut_a_cell .
+
+CMD ["python", "app.py"]

@@ -1,0 +1,34 @@
+
+services:
+  rabbitmq:
+    container_name: cloudy_light-rabbitmq-1
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"  # AMQP 端口
+      - "15672:15672"  # 管理界面端口
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: password123
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+  producer:
+    build: ./producer
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: admin
+      RABBITMQ_PASS: password123
+
+  consumer:
+    build: ./consumer
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_USER: admin
+      RABBITMQ_PASS: password123
+
+volumes:
+  rabbitmq_data:

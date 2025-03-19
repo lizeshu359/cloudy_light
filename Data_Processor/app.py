@@ -16,7 +16,7 @@ import pika
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
 RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'admin')
 RABBITMQ_PASS = os.getenv('RABBITMQ_PASS', 'password123')
-QUEUE_NAME = 'demo_queue'
+QUEUE_NAME = 'preprocessing_queue'
 
 # 连接重试参数
 RETRY_INTERVAL = 5  # 每次重试间隔（秒）

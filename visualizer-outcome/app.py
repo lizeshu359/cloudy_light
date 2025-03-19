@@ -1,6 +1,16 @@
 import pika
 import os
-import time
+import uproot # for reading .root files
+import time # to measure time to analyse
+import math # for mathematical functions such as square root
+import awkward as ak # for handling complex and nested data structures efficiently
+import numpy as np # # for numerical calculations such as histogramming
+import matplotlib.pyplot as plt # for plotting
+from matplotlib.ticker import MaxNLocator,AutoMinorLocator # for minor ticks
+from lmfit.models import PolynomialModel, GaussianModel # for the signal and background fits
+import vector #to use vectors
+import requests # for HTTP access
+import aiohttp # HTTP client support
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
 RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'admin')

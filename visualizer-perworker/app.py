@@ -1,5 +1,6 @@
 import pika
 import os
+import time
 import uproot # for reading .root files
 import time # to measure time to analyse
 import math # for mathematical functions such as square root
@@ -36,46 +37,6 @@ for i in range(10):  # 最多尝试10次
 else:
     print("无法连接到 RabbitMQ，退出程序")
     exit(1)
-
-channel = connection.channel()
-channel.queue_declare(queue=QUEUE_NAME)
-channel.basic_publish(exchange='', routing_key=QUEUE_NAME, body='Hello, RabbitMQ!')
-# Cut on the photon reconstruction quality
-def cut_photon_reconstruction(photon_isTightID):
-    # Only the events which have True for both photons are kept
-    return (photon_isTightID[:,0]==False) | (photon_isTightID[:,1]==False)
-
-# Cut on the transverse momentum
-def cut_photon_pt(photon_pt):
-# Only the events where photon_pt[0] > 50 GeV and photon_pt[1] > 30 GeV are kept
-    return (photon_pt[:,0] < 50) | (photon_pt[:,1] < 30)
-
-# Cut on the energy isolation
-def cut_isolation_pt(photon_ptcone20, photon_pt):
-# Only the events where the calorimeter isolation is less than 5.5% are kept
-    return ((photon_ptcone20[:,0]/photon_pt[:,0]) > 0.055) | ((photon_ptcone20[:,1]/photon_pt[:,1]) > 0.055)
-
-# Cut on the pseudorapidity in barrel/end-cap transition region
-def cut_photon_eta_transition(photon_eta):
-# Only the events where modulus of photon_eta is outside the range 1.37 to 1.52 are kept
-    condition_0 = (np.abs(photon_eta[:, 0]) < 1.52) & (np.abs(photon_eta[:, 0]) > 1.37)
-    condition_1 = (np.abs(photon_eta[:, 1]) < 1.52) & (np.abs(photon_eta[:, 1]) > 1.37)
-    return condition_0 | condition_1
-
-# This function calculates the invariant mass of the 2-photon state
-def calc_mass(photon_pt, photon_eta, photon_phi, photon_e):
-    p4 = vector.zip({"pt": photon_pt, "eta": photon_eta, "phi": photon_phi, "e": photon_e})
-    invariant_mass = (p4[:, 0] + p4[:, 1]).M # .M calculates the invariant mass
-    return invariant_mass
-
-# Cut on null diphoton invariant mass
-def cut_mass(invariant_mass):
-    return (invariant_mass == 0)
-
-# Cut on diphoton invariant mass based isolation
-# Only the events where the invididual photon invariant mass based isolation is larger than 35% are kept
-def cut_iso_mass(photon_pt, invariant_mass):
-    return ((photon_pt[:,0]/invariant_mass) < 0.35) | ((photon_pt[:,1]/invariant_mass) < 0.35)
 
 # x-axis range of the plot
 xmin = 100 #GeV
@@ -134,4 +95,3 @@ main_axes.yaxis.set_minor_locator( AutoMinorLocator() )
 
 # draw the legend
 main_axes.legend( frameon=False ); # no box around the legend
-connection.close()

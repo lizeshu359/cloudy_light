@@ -27,7 +27,7 @@ services:
       RABBITMQ_PASS: password123
 
   consumer:
-    build: ./consumer
+    build: reader
     depends_on:
       rabbitmq:
         condition: service_healthy

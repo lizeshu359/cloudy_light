@@ -8,3 +8,5 @@ awkward-pandas==2023.8.0
 aiohttp==3.9.5
 requests==2.32.3
 vector
+matplotlib
+lmfit

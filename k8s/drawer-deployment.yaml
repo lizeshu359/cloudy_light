@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drawer
+spec:
+  replicas: 2  # 可扩展
+  selector:
+    matchLabels:
+      app: drawer
+  template:
+    metadata:
+      labels:
+        app: drawer
+    spec:
+      containers:
+      - name: drawer
+        image: zeshuli/drawer:latest
+        env:
+        - name: RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: RABBITMQ_USER
+          value: "admin"
+        - name: RABBITMQ_PASS
+          value: "password123"
+        - name: INPUT_QUEUE
+          value: "analysis_queue"

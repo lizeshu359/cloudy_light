@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-processor
+spec:
+  replicas: 2  # 允许扩展
+  selector:
+    matchLabels:
+      app: final-analysis
+  template:
+    metadata:
+      labels:
+        app: final-analysis
+    spec:
+      containers:
+      - name: final-analysis
+        image: zeshuli/final-analysis:latest
+        env:
+        - name: RABBITMQ_HOST
+          value: "rabbitmq"
+        - name: RABBITMQ_USER
+          value: "admin"
+        - name: RABBITMQ_PASS
+          value: "password123"
+        - name: INPUT_QUEUE
+          value: "analysis_queue"
+        - name: OUTPUT_QUEUE
+          value: "processed_data_queue"

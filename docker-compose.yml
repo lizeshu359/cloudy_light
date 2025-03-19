@@ -1,4 +1,3 @@
-
 services:
   rabbitmq:
     container_name: cloudy_light-rabbitmq-1
@@ -15,27 +14,37 @@ services:
       timeout: 5s
       retries: 5
 
-  producer:
-    build: ./producer
+  data_processor:
+    build: ./Data_Processor
     depends_on:
       rabbitmq:
         condition: service_healthy
-    restart: always
+    restart: on-failure
     environment:
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_USER: admin
       RABBITMQ_PASS: password123
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbitmq:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  consumer:
-    build: reader
+  final_analysis:
+    build: ./Final_Analysis
     depends_on:
       rabbitmq:
         condition: service_healthy
-    restart: always
+    restart: on-failure
     environment:
       RABBITMQ_HOST: rabbitmq
       RABBITMQ_USER: admin
       RABBITMQ_PASS: password123
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://rabbitmq:15672"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
 volumes:
   rabbitmq_data:

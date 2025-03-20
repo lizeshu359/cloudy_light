@@ -22,5 +22,5 @@ spec:
           value: "admin"
         - name: RABBITMQ_PASS
           value: "password123"
-        - name: INPUT_QUEUE
+        - name: OUTPUT_QUEUE
           value: "preprocessing_queue"

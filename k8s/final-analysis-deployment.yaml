@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: data-processor
+  name: final-analysis
 spec:
   replicas: 2  # 允许扩展
   selector:
@@ -23,6 +23,6 @@ spec:
         - name: RABBITMQ_PASS
           value: "password123"
         - name: INPUT_QUEUE
-          value: "analysis_queue"
+          value: "preprocessing_queue"
         - name: OUTPUT_QUEUE
-          value: "processed_data_queue"
+          value: "analysis_queue"

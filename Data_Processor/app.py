@@ -16,7 +16,7 @@ import pika
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'rabbitmq')
 RABBITMQ_USER = os.getenv('RABBITMQ_USER', 'admin')
 RABBITMQ_PASS = os.getenv('RABBITMQ_PASS', 'password123')
-QUEUE_NAME = 'preprocessing_queue'
+OUTPUT_QUEUE = 'preprocessing_queue'
 
 # 连接重试参数
 RETRY_INTERVAL = 5  # 每次重试间隔（秒）
@@ -40,7 +40,7 @@ else:
     exit(1)  # 达到最大重试次数后退出
 
 channel = connection.channel()
-channel.queue_declare(queue=QUEUE_NAME)
+channel.queue_declare(queue=OUTPUT_QUEUE)
 
 # ===========================
 # 设置 ROOT 文件的路径（URL）
@@ -154,7 +154,7 @@ if all_data is not None:
     message = json.dumps(summary)
     channel.basic_publish(
         exchange="",
-        routing_key=QUEUE_NAME,
+        routing_key=OUTPUT_QUEUE,
         body=message.encode("utf-8")
     )
     print("处理摘要已发送到 RabbitMQ:", summary)

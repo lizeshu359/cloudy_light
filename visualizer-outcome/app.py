@@ -2,12 +2,18 @@ import os
 import time
 import json
 import pika
+import signal
 import time # to measure time to analyse
 
 import awkward as ak # for handling complex and nested data structures efficiently
 import numpy as np # # for numerical calculations such as histogramming
 import matplotlib.pyplot as plt # for plotting
-
+from docutils.io import Input
+from matplotlib.ticker import MaxNLocator,AutoMinorLocator # for minor ticks
+from lmfit.models import PolynomialModel, GaussianModel # for the signal and background fits
+import vector #to use vectors
+import requests # for HTTP access
+import aiohttp # HTTP client support
 
 
 # RabbitMQ 连接信息

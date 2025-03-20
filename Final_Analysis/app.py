@@ -22,10 +22,27 @@ Input_QUEUE = 'preprocessing_queue'
 Output_QUEUE = 'analysis_queue'
 
 # 连接 RabbitMQ
+# 连接重试参数
+RETRY_INTERVAL = 5  # 每次重试间隔（秒）
+MAX_RETRIES = 12    # 最多重试次数（5 秒 * 12 = 60 秒）
+
 credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASS)
-connection = pika.BlockingConnection(
-    pika.ConnectionParameters(host=RABBITMQ_HOST, virtual_host='/', credentials=credentials)
-)
+
+for attempt in range(MAX_RETRIES):
+    try:
+        print(f"[INFO] 尝试连接 RabbitMQ ({attempt + 1}/{MAX_RETRIES})...")
+        connection = pika.BlockingConnection(
+            pika.ConnectionParameters(host=RABBITMQ_HOST, virtual_host='/', credentials=credentials)
+        )
+        print("[INFO] 成功连接 RabbitMQ！")
+        break  # 连接成功，跳出循环
+    except pika.exceptions.AMQPConnectionError as e:
+        print(f"[WARNING] RabbitMQ 未就绪，{RETRY_INTERVAL} 秒后重试...")
+        time.sleep(RETRY_INTERVAL)
+else:
+    print("[ERROR] 无法连接到 RabbitMQ，退出程序！")
+    exit(1)  # 达到最大重试次数后退出
+
 channel = connection.channel()
 channel.queue_declare(queue=Input_QUEUE)
 channel.queue_declare(queue=Output_QUEUE)

@@ -63,28 +63,33 @@ RabbitMQ (optional for local testing)
 
 Build Docker Images
 
+```python
 docker build -t username/data_processor:latest ./Data_Processor
-
+```
+```python
 docker build -t username/final-analysis:latest ./Final_Analysis
-
+```
+```python
 docker build -t username/drawer:latest ./visualizer-outcome
-
+```
 ——————————————————Push Docker Images to Registry————————————————
-
+```python
 docker push username/data_processor:latest
-
+```
+```python
 docker push username/final-analysis:latest
-
+```
+```python
 docker push username/drawer:latest
-
+```
 ——————————————Deploy to Kubernetes————————————————
-
+```python
 kubectl apply -f ./k8s
-
+```
 ————————————————————————————Check Pod Status————————————————
-
+```python
 kubectl get pods
-
+```
 ————————————————Access RabbitMQ Management Interface————————————
 
 kubectl port-forward svc/rabbitmq 15672:15672
@@ -95,9 +100,9 @@ Open http://localhost:15672 in your browser and log in with admin/password123.
 
 To delete all deployed resources, run:
 
-
+```python
 kubectl delete all --all
-
+```
 ——————————————————————Project Overview————————————————————————
 
 This project is designed to handle large-scale data processing using a distributed computing approach. It leverages Docker for containerization, Kubernetes for orchestration, and RabbitMQ for message passing. The system is divided into three main components:
